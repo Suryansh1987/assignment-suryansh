@@ -1,0 +1,92 @@
+import { Link } from 'react-router-dom';
+import { Button } from '../components/common/Button';
+
+export function LandingPage() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="text-center">
+          <h1 className="text-5xl font-bold text-gray-900 mb-4">
+            AgriSense AI
+          </h1>
+          <p className="text-2xl text-gray-700 mb-8">
+            日本の農家向けAIアシスタント
+          </p>
+          <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
+            音声で質問、リアルタイム天気情報、そしてAIが提供する専門的な農業アドバイス。
+            あなたの農業をスマートにサポートします。
+          </p>
+
+          <div className="flex justify-center gap-4 mb-16">
+            <Link to="/signup">
+              <Button variant="primary" size="lg">
+                無料で始める
+              </Button>
+            </Link>
+            <Link to="/signin">
+              <Button variant="secondary" size="lg">
+                ログイン
+              </Button>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="text-4xl mb-4">🎙️</div>
+              <h3 className="text-xl font-semibold mb-2">音声入力</h3>
+              <p className="text-gray-600">
+                日本語で話しかけるだけで、AIが質問に答えます
+              </p>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="text-4xl mb-4">🌦️</div>
+              <h3 className="text-xl font-semibold mb-2">リアルタイム天気</h3>
+              <p className="text-gray-600">
+                あなたの農地の天気情報を取得し、最適なアドバイスを提供
+              </p>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="text-4xl mb-4">🤖</div>
+              <h3 className="text-xl font-semibold mb-2">AI農業アドバイス</h3>
+              <p className="text-gray-600">
+                Gemini AIによる専門的で実践的な農業アドバイス
+              </p>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="text-4xl mb-4">💬</div>
+              <h3 className="text-xl font-semibold mb-2">チャット履歴</h3>
+              <p className="text-gray-600">
+                過去の会話を保存し、いつでも振り返ることができます
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-16 bg-white rounded-lg shadow-md p-8 max-w-3xl mx-auto">
+            <h2 className="text-2xl font-bold mb-4">こんな方におすすめ</h2>
+            <ul className="text-left space-y-3 text-gray-700">
+              <li className="flex items-start">
+                <span className="text-green-600 mr-2">✓</span>
+                天気に応じた農作業のアドバイスが欲しい農家の方
+              </li>
+              <li className="flex items-start">
+                <span className="text-green-600 mr-2">✓</span>
+                病害虫対策について専門的な助言が必要な方
+              </li>
+              <li className="flex items-start">
+                <span className="text-green-600 mr-2">✓</span>
+                有機農法や減農薬栽培に興味がある方
+              </li>
+              <li className="flex items-start">
+                <span className="text-green-600 mr-2">✓</span>
+                収穫量を向上させたい方
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
