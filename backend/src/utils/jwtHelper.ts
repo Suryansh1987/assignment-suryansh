@@ -12,9 +12,9 @@ export interface JwtPayload {
  * @returns JWT token string
  */
 export function generateToken(payload: JwtPayload): string {
-  return jwt.sign(payload, config.jwt.secret, {
+  return jwt.sign(payload, config.jwt.secret as any, {
     expiresIn: config.jwt.expiresIn,
-  });
+  } as any);
 }
 
 /**

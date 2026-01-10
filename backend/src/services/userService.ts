@@ -48,7 +48,7 @@ export async function updateUserProfile(
     .set({
       ...input,
       updatedAt: new Date(),
-    })
+    } as any)
     .where(eq(users.id, userId))
     .returning();
 

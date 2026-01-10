@@ -84,7 +84,7 @@ async function saveWeatherLog(
   prefecture: string | undefined,
   weatherData: WeatherData
 ): Promise<void> {
-  const log: NewWeatherLog = {
+  const log = {
     city,
     prefecture,
     temperature: weatherData.temperature,
@@ -92,7 +92,7 @@ async function saveWeatherLog(
     rainfall: weatherData.rainfall,
     weatherCondition: mapWeatherCondition(weatherData.condition),
     description: weatherData.description,
-  };
+  } as any;
 
   await db.insert(weatherLogs).values(log);
 }

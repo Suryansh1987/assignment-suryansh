@@ -92,7 +92,7 @@ export async function updateSessionTitle(
 ): Promise<ChatSession> {
   const [updatedSession] = await db
     .update(chatSessions)
-    .set({ title, updatedAt: new Date() })
+    .set({ title, updatedAt: new Date() } as any)
     .where(and(eq(chatSessions.id, sessionId), eq(chatSessions.userId, userId)))
     .returning();
 

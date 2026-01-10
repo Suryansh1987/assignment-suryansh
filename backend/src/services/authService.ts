@@ -37,13 +37,13 @@ export async function signup(input: SignupInput): Promise<AuthResponse> {
   const passwordHash = await hashPassword(input.password);
 
   // Create new user
-  const newUser: NewUser = {
+  const newUser = {
     name: input.name,
     email: input.email,
     passwordHash,
     city: input.city,
     prefecture: input.prefecture,
-  };
+  } as any;
 
   const [createdUser] = await db.insert(users).values(newUser).returning();
 
