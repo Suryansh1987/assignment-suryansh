@@ -3,10 +3,6 @@
   "version": "1.0.0",
   "description": "Agriculture-focused AI chatbot for Japanese farmers",
   "private": true,
-  "workspaces": [
-    "frontend",
-    "backend"
-  ],
   "scripts": {
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm run dev",
