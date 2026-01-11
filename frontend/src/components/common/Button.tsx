@@ -38,12 +38,7 @@ export function Button({
       {...props}
     >
       {loading && (
-        <svg
-          className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"
-          viewBox="0 0 24 24"
-        >
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-        </svg>
+        <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
       )}
       {children}
     </button>

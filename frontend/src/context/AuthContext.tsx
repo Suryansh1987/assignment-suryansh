@@ -19,13 +19,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Initialize - check if user is logged in
   useEffect(() => {
+    console.log('[AuthContext] useEffect initAuth starting');
     const initAuth = async () => {
       const token = authService.getToken();
+      console.log('[AuthContext] Token exists:', !!token);
       if (token) {
         // Check if user is already in localStorage (just logged in)
         const cachedUser = authService.getUser();
+        console.log('[AuthContext] Cached user exists:', !!cachedUser);
         if (cachedUser) {
           // User just logged in, use cached data immediately
+          console.log('[AuthContext] Using cached user:', cachedUser);
           setUser(cachedUser);
           setLoading(false);
           return;
@@ -33,12 +37,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         // Otherwise verify with server
         try {
+          console.log('[AuthContext] Verifying token with server');
           const user = await authService.verify();
+          console.log('[AuthContext] Server verification success:', user);
           setUser(user);
         } catch (error) {
+          console.error('[AuthContext] Verification failed:', error);
           authService.clearAuth();
         }
       }
+      console.log('[AuthContext] Setting loading to false');
       setLoading(false);
     };
 
@@ -46,17 +54,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signup = async (data: SignupData) => {
+    console.log('[AuthContext] Signup starting');
     const { user, token } = await authService.signup(data);
+    console.log('[AuthContext] Signup success, user:', user);
     authService.saveAuth(token, user);
+    console.log('[AuthContext] Auth saved to localStorage');
     setUser(user);
+    console.log('[AuthContext] User state updated');
     setLoading(false);
+    console.log('[AuthContext] Loading set to false');
   };
 
   const signin = async (data: SigninData) => {
+    console.log('[AuthContext] Signin starting');
     const { user, token } = await authService.signin(data);
+    console.log('[AuthContext] Signin success, user:', user);
     authService.saveAuth(token, user);
+    console.log('[AuthContext] Auth saved to localStorage');
     setUser(user);
+    console.log('[AuthContext] User state updated');
     setLoading(false);
+    console.log('[AuthContext] Loading set to false');
   };
 
   const signout = () => {

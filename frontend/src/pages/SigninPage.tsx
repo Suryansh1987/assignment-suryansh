@@ -17,20 +17,26 @@ export function SigninPage() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    console.log('[SigninPage] Form submitted');
     setError('');
 
     if (!formData.email || !formData.password) {
+      console.log('[SigninPage] Validation failed - missing fields');
       setError(UI_TEXT.errors.required);
       return;
     }
 
+    console.log('[SigninPage] Setting loading to true');
     setLoading(true);
 
     try {
+      console.log('[SigninPage] Calling signin');
       await signin(formData);
+      console.log('[SigninPage] Signin completed, navigating to dashboard');
       navigate('/dashboard');
       // Don't set loading to false here - component is unmounting
     } catch (err: any) {
+      console.error('[SigninPage] Signin error:', err);
       setError(err.message || UI_TEXT.errors.serverError);
       setLoading(false);
     }

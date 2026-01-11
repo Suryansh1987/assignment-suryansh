@@ -20,25 +20,32 @@ export function SignupPage() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    console.log('[SignupPage] Form submitted');
     setError('');
 
     if (!formData.name || !formData.email || !formData.password) {
+      console.log('[SignupPage] Validation failed - missing fields');
       setError(UI_TEXT.errors.required);
       return;
     }
 
     if (formData.password.length < 8) {
+      console.log('[SignupPage] Validation failed - password too short');
       setError(UI_TEXT.errors.passwordTooShort);
       return;
     }
 
+    console.log('[SignupPage] Setting loading to true');
     setLoading(true);
 
     try {
+      console.log('[SignupPage] Calling signup');
       await signup(formData);
+      console.log('[SignupPage] Signup completed, navigating to dashboard');
       navigate('/dashboard');
       // Don't set loading to false here - component is unmounting
     } catch (err: any) {
+      console.error('[SignupPage] Signup error:', err);
       setError(err.message || UI_TEXT.errors.serverError);
       setLoading(false);
     }
