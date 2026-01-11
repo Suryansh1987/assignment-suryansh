@@ -56,3 +56,6 @@ coverage/
 
 # TypeScript cache
 *.tsbuildinfo
+
+# IDE and tool settings
+.claude/
