@@ -5,37 +5,49 @@ A full-stack AI-powered agriculture assistant designed specifically for Japanese
 ## 🔐 Demo Credentials
 
 ```
-Email: 22054137@kiit.ac.in
-Password: ykyclmykycc
+Email: suryansh@example.com
+Password: 12345678
 ```
 
 ## 🌐 Live Demo
 
 - **Backend API**: https://assignment-suryansh-3.onrender.com
-- **Frontend**: [Coming Soon - Deploy on Vercel]
+- **Frontend**: https://assignment-suryansh-frontend.vercel.app/
 
 ---
 
 ## 📸 Screenshots
 
 ### Home Page - Authentication
-![Home Page](screenshots/home.png)
+<img width="936" height="406" alt="image" src="https://github.com/user-attachments/assets/3123cb7f-77a8-4db8-ba83-825f74fc894a" />
+<img width="920" height="388" alt="image" src="https://github.com/user-attachments/assets/e522cb7a-e14e-474c-b394-16862548ff26" />
+
+
 *Secure login and registration with JWT authentication*
+Login Page
+<img width="1672" height="777" alt="image" src="https://github.com/user-attachments/assets/40a103b5-389f-44d3-9d5b-8e4b447dcb82" />
+
+
+Dahboard page
+<img width="926" height="408" alt="image" src="https://github.com/user-attachments/assets/7080c2e3-e3b8-4f95-9720-3cf7770782e9" />
+
+<img width="935" height="394" alt="image" src="https://github.com/user-attachments/assets/39d037f9-f88d-4e17-a85e-35ecc40deca8" />
+
 
 ### Chat Interface - AI Assistant
-![Chat Interface](screenshots/chat.png)
+<img width="752" height="398" alt="image" src="https://github.com/user-attachments/assets/aa8bbd1d-6550-4e26-80b5-d666d08cdf9d" />
+
 *Real-time AI-powered conversations with context retention*
 
-### Weather Widget
-![Weather Widget](screenshots/weather.png)
-*Live weather data integrated with farming advice*
+
 
 ### User Profile Management
-![User Profile](screenshots/profile.png)
+<img width="616" height="414" alt="image" src="https://github.com/user-attachments/assets/b10be87f-9d48-4990-87fd-4df4ee551ef6" />
 *Manage personal info, farm details, and location settings*
 
 ### Conversation History
-![Conversation History](screenshots/conversations.png)
+<img width="188" height="404" alt="image" src="https://github.com/user-attachments/assets/fb7bb4c3-bf00-4d2d-b795-6f5ce6a08d5c" />
+
 *All past conversations saved and accessible anytime*
 
 ---
