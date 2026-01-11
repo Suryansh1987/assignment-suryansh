@@ -38,13 +38,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signup = async (data: SignupData) => {
     const { user, token } = await authService.signup(data);
     authService.saveAuth(token, user);
-    setUser(user);
+    // Use a Promise to ensure state is updated before returning
+    await new Promise<void>((resolve) => {
+      setUser(user);
+      // Wait for next tick to ensure state update is processed
+      setTimeout(() => resolve(), 0);
+    });
   };
 
   const signin = async (data: SigninData) => {
     const { user, token } = await authService.signin(data);
     authService.saveAuth(token, user);
-    setUser(user);
+    // Use a Promise to ensure state is updated before returning
+    await new Promise<void>((resolve) => {
+      setUser(user);
+      // Wait for next tick to ensure state update is processed
+      setTimeout(() => resolve(), 0);
+    });
   };
 
   const signout = () => {

@@ -4,7 +4,25 @@ import { WeatherWidget } from '../components/dashboard/WeatherWidget';
 import { UI_TEXT } from '../utils/constants';
 
 export function DashboardPage() {
-  const { user, signout } = useAuth();
+  const { user, loading, signout } = useAuth();
+
+  // Show loading state while authentication is being verified
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-6xl mb-4">🌾</div>
+          <h2 className="text-2xl font-bold text-gray-700 mb-2">AgriSense AI</h2>
+          <p className="text-gray-600">読み込み中...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect to signin if not authenticated (shouldn't happen with ProtectedRoute, but safety check)
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-green-50">
