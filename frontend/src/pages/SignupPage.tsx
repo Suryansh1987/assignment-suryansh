@@ -37,9 +37,9 @@ export function SignupPage() {
     try {
       await signup(formData);
       navigate('/dashboard');
+      // Don't set loading to false here - component is unmounting
     } catch (err: any) {
       setError(err.message || UI_TEXT.errors.serverError);
-    } finally {
       setLoading(false);
     }
   };
