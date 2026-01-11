@@ -22,6 +22,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const initAuth = async () => {
       const token = authService.getToken();
       if (token) {
+        // Check if user is already in localStorage (just logged in)
+        const cachedUser = authService.getUser();
+        if (cachedUser) {
+          // User just logged in, use cached data immediately
+          setUser(cachedUser);
+          setLoading(false);
+          return;
+        }
+
+        // Otherwise verify with server
         try {
           const user = await authService.verify();
           setUser(user);
@@ -38,23 +48,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signup = async (data: SignupData) => {
     const { user, token } = await authService.signup(data);
     authService.saveAuth(token, user);
-    // Use a Promise to ensure state is updated before returning
-    await new Promise<void>((resolve) => {
-      setUser(user);
-      // Wait for next tick to ensure state update is processed
-      setTimeout(() => resolve(), 0);
-    });
+    setUser(user);
+    setLoading(false);
   };
 
   const signin = async (data: SigninData) => {
     const { user, token } = await authService.signin(data);
     authService.saveAuth(token, user);
-    // Use a Promise to ensure state is updated before returning
-    await new Promise<void>((resolve) => {
-      setUser(user);
-      // Wait for next tick to ensure state update is processed
-      setTimeout(() => resolve(), 0);
-    });
+    setUser(user);
+    setLoading(false);
   };
 
   const signout = () => {
