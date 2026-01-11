@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
+import { useAuth } from '../context/AuthContext';
 
 export function LandingPage() {
+  const { user, loading } = useAuth();
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header showAuthButtons={true} />
@@ -32,20 +35,41 @@ export function LandingPage() {
                 あなたの農業をスマートにサポートします。
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  to="/signup"
-                  className="bg-white text-green-700 px-8 py-4 rounded-lg hover:bg-green-50 font-bold text-lg transition-all transform hover:scale-105 shadow-lg text-center"
-                >
-                  無料で始める →
-                </Link>
-                <Link
-                  to="/signin"
-                  className="bg-green-700 text-white px-8 py-4 rounded-lg hover:bg-green-800 font-medium text-lg transition-all border-2 border-white text-center"
-                >
-                  ログイン
-                </Link>
-              </div>
+              {!loading && (
+                <div className="flex flex-col sm:flex-row gap-4">
+                  {user ? (
+                    <>
+                      <Link
+                        to="/dashboard"
+                        className="bg-white text-green-700 px-8 py-4 rounded-lg hover:bg-green-50 font-bold text-lg transition-all transform hover:scale-105 shadow-lg text-center"
+                      >
+                        ダッシュボードへ →
+                      </Link>
+                      <Link
+                        to="/chat"
+                        className="bg-green-700 text-white px-8 py-4 rounded-lg hover:bg-green-800 font-medium text-lg transition-all border-2 border-white text-center"
+                      >
+                        チャットを開始
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        to="/signup"
+                        className="bg-white text-green-700 px-8 py-4 rounded-lg hover:bg-green-50 font-bold text-lg transition-all transform hover:scale-105 shadow-lg text-center"
+                      >
+                        無料で始める →
+                      </Link>
+                      <Link
+                        to="/signin"
+                        className="bg-green-700 text-white px-8 py-4 rounded-lg hover:bg-green-800 font-medium text-lg transition-all border-2 border-white text-center"
+                      >
+                        ログイン
+                      </Link>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="hidden lg:block">
@@ -254,43 +278,91 @@ export function LandingPage() {
             </div>
 
             <div className="bg-white rounded-2xl shadow-2xl p-8">
-              <div className="text-center mb-6">
-                <div className="text-7xl mb-4">🌾🚜🌱</div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                  今すぐ始めましょう
-                </h3>
-                <p className="text-gray-600">
-                  無料で登録して、AIアシスタントを体験
-                </p>
-              </div>
+              {!loading && (
+                <>
+                  {user ? (
+                    <>
+                      <div className="text-center mb-6">
+                        <div className="text-7xl mb-4">👋🌾</div>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                          おかえりなさい、{user.name}さん
+                        </h3>
+                        <p className="text-gray-600">
+                          AIアシスタントがあなたをサポートします
+                        </p>
+                      </div>
 
-              <div className="space-y-4">
-                <div className="flex items-center">
-                  <div className="bg-green-100 text-green-700 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">
-                    1
-                  </div>
-                  <p className="text-gray-700">アカウントを無料で作成</p>
-                </div>
-                <div className="flex items-center">
-                  <div className="bg-green-100 text-green-700 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">
-                    2
-                  </div>
-                  <p className="text-gray-700">農地情報と作物を登録</p>
-                </div>
-                <div className="flex items-center">
-                  <div className="bg-green-100 text-green-700 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">
-                    3
-                  </div>
-                  <p className="text-gray-700">AIアシスタントに質問開始</p>
-                </div>
-              </div>
+                      <div className="space-y-4">
+                        <div className="flex items-center">
+                          <div className="bg-green-100 text-green-700 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">
+                            ✓
+                          </div>
+                          <p className="text-gray-700">ダッシュボードで情報確認</p>
+                        </div>
+                        <div className="flex items-center">
+                          <div className="bg-green-100 text-green-700 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">
+                            ✓
+                          </div>
+                          <p className="text-gray-700">AIチャットで質問</p>
+                        </div>
+                        <div className="flex items-center">
+                          <div className="bg-green-100 text-green-700 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">
+                            ✓
+                          </div>
+                          <p className="text-gray-700">プロフィールを編集</p>
+                        </div>
+                      </div>
 
-              <Link
-                to="/signup"
-                className="block w-full bg-primary-600 text-white px-8 py-4 rounded-lg hover:bg-primary-700 font-bold text-lg transition-all text-center mt-6"
-              >
-                無料で始める
-              </Link>
+                      <Link
+                        to="/dashboard"
+                        className="block w-full bg-primary-600 text-white px-8 py-4 rounded-lg hover:bg-primary-700 font-bold text-lg transition-all text-center mt-6"
+                      >
+                        ダッシュボードへ
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-center mb-6">
+                        <div className="text-7xl mb-4">🌾🚜🌱</div>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                          今すぐ始めましょう
+                        </h3>
+                        <p className="text-gray-600">
+                          無料で登録して、AIアシスタントを体験
+                        </p>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="flex items-center">
+                          <div className="bg-green-100 text-green-700 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">
+                            1
+                          </div>
+                          <p className="text-gray-700">アカウントを無料で作成</p>
+                        </div>
+                        <div className="flex items-center">
+                          <div className="bg-green-100 text-green-700 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">
+                            2
+                          </div>
+                          <p className="text-gray-700">農地情報と作物を登録</p>
+                        </div>
+                        <div className="flex items-center">
+                          <div className="bg-green-100 text-green-700 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">
+                            3
+                          </div>
+                          <p className="text-gray-700">AIアシスタントに質問開始</p>
+                        </div>
+                      </div>
+
+                      <Link
+                        to="/signup"
+                        className="block w-full bg-primary-600 text-white px-8 py-4 rounded-lg hover:bg-primary-700 font-bold text-lg transition-all text-center mt-6"
+                      >
+                        無料で始める
+                      </Link>
+                    </>
+                  )}
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -299,18 +371,49 @@ export function LandingPage() {
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-green-600 to-green-700 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            スマート農業を今日から始めませんか？
-          </h2>
-          <p className="text-xl md:text-2xl mb-8 text-green-100">
-            AIがあなたの農業パートナーとして、24時間365日サポートします
-          </p>
-          <Link
-            to="/signup"
-            className="inline-block bg-white text-green-700 px-10 py-4 rounded-lg hover:bg-green-50 font-bold text-xl transition-all transform hover:scale-105 shadow-lg"
-          >
-            無料アカウントを作成 →
-          </Link>
+          {!loading && (
+            <>
+              {user ? (
+                <>
+                  <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                    {user.name}さん、今日も農業をサポートします！
+                  </h2>
+                  <p className="text-xl md:text-2xl mb-8 text-green-100">
+                    AIアシスタントがいつでもあなたをサポートします
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <Link
+                      to="/dashboard"
+                      className="inline-block bg-white text-green-700 px-10 py-4 rounded-lg hover:bg-green-50 font-bold text-xl transition-all transform hover:scale-105 shadow-lg"
+                    >
+                      ダッシュボードへ →
+                    </Link>
+                    <Link
+                      to="/chat"
+                      className="inline-block bg-green-800 text-white px-10 py-4 rounded-lg hover:bg-green-900 font-bold text-xl transition-all transform hover:scale-105 shadow-lg border-2 border-white"
+                    >
+                      チャットを開始
+                    </Link>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                    スマート農業を今日から始めませんか？
+                  </h2>
+                  <p className="text-xl md:text-2xl mb-8 text-green-100">
+                    AIがあなたの農業パートナーとして、24時間365日サポートします
+                  </p>
+                  <Link
+                    to="/signup"
+                    className="inline-block bg-white text-green-700 px-10 py-4 rounded-lg hover:bg-green-50 font-bold text-xl transition-all transform hover:scale-105 shadow-lg"
+                  >
+                    無料アカウントを作成 →
+                  </Link>
+                </>
+              )}
+            </>
+          )}
         </div>
       </section>
 

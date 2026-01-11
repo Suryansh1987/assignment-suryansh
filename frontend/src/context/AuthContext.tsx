@@ -49,14 +49,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { user, token } = await authService.signup(data);
     authService.saveAuth(token, user);
     setUser(user);
-    setLoading(false);
   };
 
   const signin = async (data: SigninData) => {
     const { user, token } = await authService.signin(data);
     authService.saveAuth(token, user);
     setUser(user);
-    setLoading(false);
   };
 
   const signout = () => {
