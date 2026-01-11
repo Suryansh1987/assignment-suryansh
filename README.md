@@ -1,343 +1,545 @@
-# AgriSense AI (アグリセンス AI)
+# AgriSense AI - Agriculture Chatbot for Japanese Farmers
 
-A production-ready full-stack agriculture chatbot for Japanese farmers with voice input, real-time weather integration, and AI-powered farming advice.
+A full-stack AI-powered agriculture assistant designed specifically for Japanese farmers, providing personalized farming advice, weather information, and persistent conversation management.
 
-## Features
+## 🔐 Demo Credentials
 
-- 🎙️ **Japanese Voice Input** - Speak naturally in Japanese using Web Speech API
-- 🌦️ **Real-time Weather** - Get current weather data for your farm location
-- 🤖 **AI-Powered Advice** - Receive contextual farming recommendations from Google Gemini
-- 💬 **Chat History** - Multiple conversation sessions with full message history
-- 👤 **User Profiles** - Manage personal info and farm details (crops, size, methods)
-- 🔐 **Secure Authentication** - JWT-based signup and signin
-- 📱 **Responsive Design** - Works on desktop and mobile devices
+```
+Email: 22054137@kiit.ac.in
+Password: ykyclmykycc
+```
 
-## Tech Stack
+## 🌐 Live Demo
+
+- **Backend API**: https://assignment-suryansh-3.onrender.com
+- **Frontend**: [Coming Soon - Deploy on Vercel]
+
+---
+
+## 📸 Screenshots
+
+### Home Page - Authentication
+![Home Page](screenshots/home.png)
+*Secure login and registration with JWT authentication*
+
+### Chat Interface - AI Assistant
+![Chat Interface](screenshots/chat.png)
+*Real-time AI-powered conversations with context retention*
+
+### Weather Widget
+![Weather Widget](screenshots/weather.png)
+*Live weather data integrated with farming advice*
+
+### User Profile Management
+![User Profile](screenshots/profile.png)
+*Manage personal info, farm details, and location settings*
+
+### Conversation History
+![Conversation History](screenshots/conversations.png)
+*All past conversations saved and accessible anytime*
+
+---
+
+## 🚀 Tech Stack
 
 ### Frontend
-- **Framework**: Vite + React 18 + TypeScript
+- **Framework**: React 18 with TypeScript
+- **Build Tool**: Vite
 - **Styling**: Tailwind CSS
-- **Routing**: React Router v6
+- **State Management**: React Context API
 - **HTTP Client**: Axios
-- **Voice**: Web Speech API (ja-JP)
+- **Routing**: React Router v6
+- **Icons**: Lucide React
 
 ### Backend
-- **Runtime**: Node.js + Express
-- **Language**: TypeScript
-- **Database**: Neon PostgreSQL
+- **Runtime**: Node.js 20
+- **Framework**: Express.js with TypeScript
+- **Database**: PostgreSQL (Neon Serverless)
 - **ORM**: Drizzle ORM
-- **Authentication**: JWT + bcrypt
-- **AI**: Google Gemini API
-- **Weather**: OpenWeatherMap API
+- **Authentication**: JWT (JSON Web Tokens)
+- **Password Hashing**: bcrypt
+- **AI Integration**: Google Gemini 2.0 Flash
+- **Weather API**: OpenWeatherMap API
+- **Validation**: Zod
+- **Security**: Helmet, CORS, Rate Limiting
 
-### Deployment
-- **Frontend**: Vercel
-- **Backend**: Railway
-- **Database**: Neon (Serverless PostgreSQL)
+### DevOps & Deployment
+- **Backend Hosting**: Render (Docker)
+- **Frontend Hosting**: Vercel
+- **Database**: Neon PostgreSQL (Serverless)
+- **Version Control**: Git & GitHub
+- **Containerization**: Docker
 
-## Project Structure
+---
+
+## ✨ Key Features
+
+### 1. 🔐 User Authentication & Authorization
+- Secure signup and signin with JWT tokens
+- Password hashing with bcrypt (10 rounds)
+- Token-based session management
+- Protected routes and API endpoints
+- Automatic token refresh
+
+### 2. 🤖 AI-Powered Chat Assistant
+- **Intelligent Responses**: Context-aware AI using Google Gemini 2.0 Flash
+- **Agriculture Expertise**: Specialized knowledge for Japanese farming practices
+- **Multi-turn Conversations**: AI remembers entire conversation history
+- **Personalized Advice**: Recommendations based on user's farm details and location
+- **Topics Covered**:
+  - Crop recommendations and cultivation techniques
+  - Pest control and disease management
+  - Soil health and fertilization
+  - Irrigation and water management
+  - Seasonal planting schedules
+  - Weather-based farming decisions
+
+### 3. 💬 Persistent Conversation Management
+**All conversations are permanently saved to the database:**
+- ✅ **Conversation Retention**: Every message (user and AI) is stored with timestamps
+- ✅ **Resume Chats**: Continue any previous conversation from where you left off
+- ✅ **Session History**: View all past chat sessions with titles
+- ✅ **Context Preservation**: AI maintains full conversation context across sessions
+- ✅ **Delete Option**: Remove unwanted conversations anytime
+- ✅ **Auto-titling**: Sessions automatically titled based on first message
+
+**How It Works:**
+1. User sends a message → Saved to database
+2. AI responds → Response saved to database
+3. User closes app → All data preserved
+4. User returns → Can access any previous conversation
+5. Click on old session → All messages loaded instantly
+6. Continue chatting → New messages added to same session
+
+### 4. 🌦️ Real-Time Weather Information
+- Location-based weather data from OpenWeatherMap
+- Current conditions: Temperature, humidity, rainfall
+- Weather descriptions in Japanese
+- Integration with user's farm location (city + prefecture)
+- Weather-aware farming recommendations
+
+### 5. 👤 User Profile Management
+- **Personal Information**: Name, email, location
+- **Farm Details**:
+  - Farm size (e.g., "2ha", "5000平方メートル")
+  - Crop types (e.g., "rice", "tomato", "cucumber")
+  - Farming methods (e.g., "organic", "greenhouse", "traditional")
+- **Location Settings**: City and prefecture for weather data
+- Update profile anytime
+
+### 6. 📱 Responsive Design
+- Mobile-first approach
+- Adaptive layout for all screen sizes
+- Touch-friendly interface
+- Optimized for Japanese text rendering
+
+---
+
+## 🏗️ Architecture
+
+### Database Schema
+
+```sql
+-- Users Table
+CREATE TABLE users (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  city VARCHAR(100),
+  prefecture VARCHAR(100),
+  farm_size VARCHAR(50),
+  crop_types JSONB,
+  farming_methods JSONB,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Chat Sessions Table
+CREATE TABLE chat_sessions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  title VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Messages Table
+CREATE TABLE messages (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  session_id UUID NOT NULL REFERENCES chat_sessions(id) ON DELETE CASCADE,
+  role ENUM('user', 'assistant') NOT NULL,
+  content TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Weather Logs Table (Optional - for analytics)
+CREATE TABLE weather_logs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  city VARCHAR(100) NOT NULL,
+  prefecture VARCHAR(100),
+  temperature VARCHAR(20),
+  humidity VARCHAR(20),
+  rainfall VARCHAR(20),
+  weather_condition VARCHAR(50),
+  description VARCHAR(255),
+  fetched_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+### API Endpoints
+
+#### 🔐 Authentication
+```
+POST   /api/auth/signup     - Register new user
+POST   /api/auth/signin     - User login
+POST   /api/auth/signout    - User logout
+GET    /api/auth/me         - Get current user
+```
+
+#### 💬 Chat
+```
+POST   /api/chat                      - Send message and get AI response
+GET    /api/chat/sessions             - Get all user sessions
+GET    /api/chat/sessions/:sessionId  - Get specific session with all messages
+DELETE /api/chat/sessions/:sessionId  - Delete a session
+```
+
+#### 🌦️ Weather
+```
+GET    /api/weather?city=Tokyo&prefecture=Tokyo  - Get weather data
+```
+
+#### 👤 User
+```
+GET    /api/users/profile   - Get user profile
+PUT    /api/users/profile   - Update user profile
+```
+
+#### ❤️ Health
+```
+GET    /api/health          - API health check
+```
+
+---
+
+## 🎯 Implementation Details
+
+### Conversation Retention System
+
+The application implements a robust conversation persistence system:
+
+**Frontend Flow:**
+1. User creates new chat → POST to `/api/chat` with message
+2. Backend creates session + saves user message + gets AI response + saves AI response
+3. All messages returned to frontend with session ID
+4. Frontend stores session ID in state
+5. User continues chatting → Messages sent with session ID
+6. Backend appends to existing session
+
+**Backend Flow:**
+```typescript
+// When user sends message
+1. Check if sessionId exists
+2. If no sessionId → Create new session
+3. Save user message to database
+4. Fetch all previous messages from this session
+5. Send conversation history to Gemini AI
+6. Get AI response
+7. Save AI response to database
+8. Return both messages to frontend
+```
+
+**Database Relations:**
+- One user has many chat sessions (1:N)
+- One session has many messages (1:N)
+- Cascade delete: Deleting user removes all sessions and messages
+- Cascade delete: Deleting session removes all messages
+
+### AI Context Management
+
+The chatbot maintains intelligent context:
+- Sends up to last 20 messages to AI for context
+- System prompt specializes AI for agriculture
+- User profile data included in context
+- Current weather data included when relevant
+
+### Security Features
+
+- ✅ Password hashing with bcrypt (10 rounds)
+- ✅ JWT token authentication with expiry
+- ✅ HTTP-only cookie support
+- ✅ CORS protection
+- ✅ Rate limiting (100 requests per 15 minutes)
+- ✅ Helmet.js security headers
+- ✅ Input validation with Zod
+- ✅ SQL injection protection (Drizzle ORM)
+- ✅ XSS protection
+
+---
+
+## 📦 Installation & Setup
+
+### Prerequisites
+- Node.js 20+
+- PostgreSQL database (or Neon account)
+- Google Gemini API key
+- OpenWeatherMap API key
+
+### Backend Setup
+
+```bash
+cd backend
+
+# Install dependencies
+npm install
+
+# Create .env file
+cat > .env << EOF
+DATABASE_URL=your_postgres_connection_string
+JWT_SECRET=your_jwt_secret_min_32_chars
+GEMINI_API_KEY=your_gemini_api_key
+OPENWEATHER_API_KEY=your_openweather_key
+FRONTEND_URL=http://localhost:5173
+NODE_ENV=development
+PORT=5000
+JWT_EXPIRES_IN=7d
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+EOF
+
+# Run database migrations
+npm run db:push
+
+# Start development server
+npm run dev
+```
+
+### Frontend Setup
+
+```bash
+cd frontend
+
+# Install dependencies
+npm install
+
+# Create .env file
+echo "VITE_API_URL=http://localhost:5000" > .env
+
+# Start development server
+npm run dev
+```
+
+### Docker Deployment (Backend)
+
+```bash
+cd backend
+
+# Build Docker image
+docker build -t agrisense-backend .
+
+# Run container
+docker run -p 5000:5000 \
+  -e DATABASE_URL=your_db_url \
+  -e JWT_SECRET=your_secret \
+  -e GEMINI_API_KEY=your_key \
+  -e OPENWEATHER_API_KEY=your_key \
+  -e FRONTEND_URL=your_frontend_url \
+  -e NODE_ENV=production \
+  agrisense-backend
+```
+
+---
+
+## 🌍 Deployment Guide
+
+### Backend on Render
+
+1. **Create Web Service**
+   - Environment: Docker
+   - Root Directory: `./backend`
+   - Dockerfile Path: `./backend/Dockerfile`
+
+2. **Set Environment Variables**
+   ```
+   NODE_ENV=production
+   PORT=5000
+   DATABASE_URL=your_neon_postgres_url
+   JWT_SECRET=your_secret_min_32_chars
+   GEMINI_API_KEY=your_gemini_key
+   OPENWEATHER_API_KEY=your_weather_key
+   FRONTEND_URL=your_vercel_url
+   ```
+
+3. **Deploy**
+   - Push to GitHub
+   - Render auto-deploys on push
+
+### Frontend on Vercel
+
+1. **Import Project**
+   - Root Directory: `./frontend`
+   - Framework: Vite
+
+2. **Set Environment Variables**
+   ```
+   VITE_API_URL=https://your-backend.onrender.com
+   ```
+
+3. **Deploy**
+   - Vercel auto-deploys on push
+
+4. **Update Backend**
+   - Add Vercel URL to `FRONTEND_URL` in Render
+
+---
+
+## 📁 Project Structure
 
 ```
 japanese-company/
-├── frontend/           # React + Vite application
+├── backend/
 │   ├── src/
-│   │   ├── pages/      # Page components
-│   │   ├── components/ # Reusable UI components
-│   │   ├── hooks/      # Custom React hooks
-│   │   ├── services/   # API service layer
-│   │   ├── context/    # React context providers
-│   │   └── types/      # TypeScript type definitions
-│   └── package.json
+│   │   ├── config/           # Environment & database config
+│   │   │   ├── env.ts        # Environment validation
+│   │   │   └── database.ts   # Database connection
+│   │   ├── db/               # Database schema & migrations
+│   │   │   └── schema.ts     # Drizzle schema definitions
+│   │   ├── middleware/       # Express middlewares
+│   │   │   ├── auth.ts       # JWT authentication
+│   │   │   ├── errorHandler.ts
+│   │   │   └── rateLimiter.ts
+│   │   ├── routes/           # API route definitions
+│   │   │   ├── authRoutes.ts
+│   │   │   ├── chatRoutes.ts
+│   │   │   ├── userRoutes.ts
+│   │   │   └── weatherRoutes.ts
+│   │   ├── services/         # Business logic
+│   │   │   ├── authService.ts
+│   │   │   ├── chatService.ts
+│   │   │   ├── sessionService.ts
+│   │   │   ├── userService.ts
+│   │   │   └── weatherService.ts
+│   │   ├── utils/            # Helper functions
+│   │   │   └── jwtHelper.ts
+│   │   ├── index.ts          # Application entry point
+│   │   └── server.ts         # Express server setup
+│   ├── Dockerfile
+│   ├── .dockerignore
+│   ├── package.json
+│   └── tsconfig.json
 │
-└── backend/            # Express API server
-    ├── src/
-    │   ├── db/         # Database schema and migrations
-    │   ├── controllers/# Route handlers
-    │   ├── services/   # Business logic
-    │   ├── middlewares/# Express middlewares
-    │   ├── routes/     # API routes
-    │   ├── config/     # Configuration files
-    │   └── utils/      # Utility functions
-    └── package.json
+├── frontend/
+│   ├── src/
+│   │   ├── api/              # API client & services
+│   │   │   ├── client.ts     # Axios instance
+│   │   │   └── services.ts   # API methods
+│   │   ├── components/       # React components
+│   │   │   ├── chat/         # Chat-related components
+│   │   │   ├── common/       # Reusable UI components
+│   │   │   └── layout/       # Layout components
+│   │   ├── context/          # React Context providers
+│   │   │   └── AuthContext.tsx
+│   │   ├── hooks/            # Custom React hooks
+│   │   ├── pages/            # Page components
+│   │   │   ├── Home.tsx
+│   │   │   ├── Chat.tsx
+│   │   │   └── Profile.tsx
+│   │   ├── types/            # TypeScript definitions
+│   │   │   └── index.ts
+│   │   ├── utils/            # Helper functions
+│   │   ├── App.tsx           # Root component
+│   │   └── main.tsx          # Application entry
+│   ├── package.json
+│   └── vite.config.ts
+│
+├── render.yaml               # Render deployment config
+├── package.json              # Root package.json
+└── README.md
 ```
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+ and npm
-- Neon PostgreSQL account (free tier available)
-- Google Gemini API key (from Google AI Studio)
-- OpenWeatherMap API key (free tier available)
-
-### 1. Clone and Install
-
-```bash
-# Clone the repository
-git clone <repository-url>
-cd japanese-company
-
-# Install root dependencies
-npm install
-
-# Install all workspace dependencies
-npm run install:all
-```
-
-### 2. Database Setup
-
-1. Create a free account at [neon.tech](https://neon.tech)
-2. Create a new project named "agrisense-db"
-3. Select region: Tokyo (closest to Japan)
-4. Copy the connection string
-
-### 3. Get API Keys
-
-**Google Gemini API:**
-1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Create a new API key
-3. Copy the key
-
-**OpenWeatherMap API:**
-1. Sign up at [OpenWeatherMap](https://openweathermap.org/api)
-2. Get a free API key from your account dashboard
-3. Copy the key
-
-### 4. Configure Environment Variables
-
-**Backend (.env):**
-
-Create `backend/.env`:
-
-```env
-NODE_ENV=development
-PORT=5000
-FRONTEND_URL=http://localhost:5173
-
-# Database (from Neon)
-DATABASE_URL=postgresql://user:password@host/database?sslmode=require
-
-# JWT Authentication
-JWT_SECRET=your-super-secret-jwt-key-min-32-characters-long
-JWT_EXPIRES_IN=7d
-
-# Google Gemini AI
-GEMINI_API_KEY=your-gemini-api-key-here
-
-# OpenWeatherMap
-OPENWEATHER_API_KEY=your-openweather-api-key-here
-```
-
-**Frontend (.env):**
-
-Create `frontend/.env`:
-
-```env
-VITE_API_BASE_URL=http://localhost:5000/api
-VITE_APP_NAME=AgriSense AI
-```
-
-### 5. Initialize Database
-
-```bash
-cd backend
-
-# Generate migration files
-npm run db:generate
-
-# Push schema to database
-npm run db:push
-```
-
-### 6. Run Development Servers
-
-**Option 1: Run both servers concurrently (from root directory):**
-
-```bash
-npm run dev
-```
-
-**Option 2: Run separately:**
-
-```bash
-# Terminal 1 - Backend
-cd backend
-npm run dev
-
-# Terminal 2 - Frontend
-cd frontend
-npm run dev
-```
-
-The app will be available at:
-- **Frontend**: http://localhost:5173
-- **Backend**: http://localhost:5000
-
-## Available Scripts
-
-### Root Directory
-
-```bash
-npm run dev              # Run both frontend and backend
-npm run build            # Build both projects
-npm run install:all      # Install all dependencies
-```
-
-### Backend
-
-```bash
-npm run dev              # Start development server with hot reload
-npm run build            # Build TypeScript to JavaScript
-npm start                # Run production server
-npm run db:generate      # Generate Drizzle migration files
-npm run db:push          # Push schema to database
-npm run db:studio        # Open Drizzle Studio (database GUI)
-```
-
-### Frontend
-
-```bash
-npm run dev              # Start Vite dev server
-npm run build            # Build for production
-npm run preview          # Preview production build
-npm run lint             # Run ESLint
-```
-
-## Usage Guide
-
-### 1. Sign Up
-
-1. Visit the landing page
-2. Click "アカウント登録" (Sign Up)
-3. Enter your details:
-   - Name
-   - Email
-   - Password
-   - City (e.g., 横浜市)
-   - Prefecture (e.g., 神奈川県)
-4. Submit to create account
-
-### 2. Complete Profile
-
-1. Go to Profile page
-2. Add farm details:
-   - Farm size (e.g., "2ha")
-   - Crop types (e.g., 米, トマト, キュウリ)
-   - Farming methods (e.g., 有機農法, 温室栽培)
-
-### 3. Start Chatting
-
-1. Click "新しいチャット" (New Chat)
-2. Type your question or click the microphone button to speak in Japanese
-3. Get AI-powered farming advice based on your profile and current weather
-4. Continue the conversation - AI remembers context!
-
-### 4. Voice Input
-
-1. Click the microphone button (🎤) in the chat input
-2. Allow microphone permissions when prompted
-3. Speak your question in Japanese
-4. Text will automatically appear in the input field
-5. Click send or press Enter
-
-## API Documentation
-
-### Authentication Endpoints
-
-```
-POST /api/auth/signup    # Register new user
-POST /api/auth/signin    # Login user
-GET  /api/auth/verify    # Verify JWT token
-```
-
-### User Endpoints
-
-```
-GET  /api/users/profile  # Get current user profile
-PUT  /api/users/profile  # Update user profile and farm details
-```
-
-### Chat Endpoints
-
-```
-GET  /api/sessions         # Get all user sessions
-POST /api/sessions         # Create new chat session
-GET  /api/sessions/:id     # Get session with messages
-DELETE /api/sessions/:id   # Delete session
-
-POST /api/chat/message     # Send message and get AI response
-```
-
-### Weather Endpoints
-
-```
-GET  /api/weather/current  # Get current weather for user location
-```
-
-## Deployment
-
-### Backend (Railway)
-
-1. Push code to GitHub
-2. Connect Railway to your repository
-3. Set root directory: `/backend`
-4. Add environment variables (see Backend .env section)
-5. Add Neon PostgreSQL database URL
-6. Deploy - Railway auto-deploys on push
-
-### Frontend (Vercel)
-
-1. Push code to GitHub
-2. Import project in Vercel
-3. Set root directory: `/frontend`
-4. Framework: Vite
-5. Add environment variables:
-   - `VITE_API_BASE_URL`: Your Railway backend URL
-6. Deploy - Vercel auto-deploys on push
-
-## Troubleshooting
-
-### Voice Input Not Working
-
-- **Issue**: Microphone button doesn't appear
-- **Solution**: Voice input requires HTTPS in production. Ensure your Vercel deployment uses HTTPS. It works on localhost for development.
-
-### Database Connection Errors
-
-- **Issue**: Cannot connect to database
-- **Solution**: Ensure your Neon database connection string includes `?sslmode=require` at the end
-
-### CORS Errors
-
-- **Issue**: Frontend can't access backend API
-- **Solution**: Ensure `FRONTEND_URL` in backend .env matches your frontend URL exactly
-
-### AI Not Responding
-
-- **Issue**: Chat messages fail or return errors
-- **Solution**: Verify your `GEMINI_API_KEY` is valid and has not exceeded quota
-
-## Contributing
+---
+
+## 🎓 Learning Highlights
+
+### What Was Implemented
+
+✅ **Full-Stack Architecture** - Separate frontend and backend with REST API
+✅ **Database Design** - Relational schema with proper foreign keys and cascading
+✅ **Authentication System** - JWT-based with secure password hashing
+✅ **AI Integration** - Google Gemini API with conversation history
+✅ **Persistent Storage** - All messages and sessions saved to PostgreSQL
+✅ **State Management** - React Context for global auth state
+✅ **API Design** - RESTful endpoints with proper HTTP methods
+✅ **Error Handling** - Comprehensive error handling on frontend and backend
+✅ **Type Safety** - Full TypeScript coverage for better development experience
+✅ **Docker Containerization** - Backend containerized for consistent deployment
+✅ **Environment Configuration** - Proper env var management with validation
+
+### Technologies Learned
+
+- **Drizzle ORM**: Type-safe database queries in TypeScript
+- **Neon PostgreSQL**: Serverless PostgreSQL with automatic scaling
+- **Google Gemini AI**: Advanced AI model integration
+- **JWT Authentication**: Stateless authentication with tokens
+- **Docker**: Containerization for production deployment
+- **Render**: Cloud platform for backend hosting
+- **Vercel**: Frontend hosting with automatic deployments
+
+---
+
+## 🔮 Future Enhancements
+
+- [ ] Image upload for crop disease detection using AI vision
+- [ ] Multi-language support (English, Japanese, Hindi)
+- [ ] Push notifications for weather alerts
+- [ ] Crop calendar with planting/harvesting reminders
+- [ ] Community forum for farmers to share knowledge
+- [ ] Mobile app using React Native
+- [ ] Voice input for Japanese speech recognition
+- [ ] Offline mode with local caching
+- [ ] Export conversation history as PDF
+- [ ] Integration with IoT sensors for real-time farm data
+
+---
+
+## 🤝 Contributing
 
 Contributions are welcome! Please follow these steps:
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## License
-
-MIT License - feel free to use this project for your own purposes.
-
-## Support
-
-For issues or questions:
-- Open an issue on GitHub
-- Check existing issues for solutions
-- Review the troubleshooting section above
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ---
 
-Built with ❤️ for Japanese farmers using modern web technologies
+## 📄 License
+
+This project is licensed under the MIT License - feel free to use it for your own projects!
+
+---
+
+## 👨‍💻 Author
+
+**Suryansh**
+- GitHub: [@Suryansh1987](https://github.com/Suryansh1987)
+- Email: 22054137@kiit.ac.in
+
+---
+
+## 🙏 Acknowledgments
+
+- **Google Gemini AI** - For powerful natural language processing
+- **OpenWeatherMap** - For reliable weather data
+- **Neon** - For serverless PostgreSQL hosting
+- **Render** - For easy Docker deployment
+- **Vercel** - For seamless frontend hosting
+- **Drizzle ORM** - For type-safe database queries
+
+---
+
+**Made with ❤️ for Japanese farmers**
+
+*Helping farmers make data-driven decisions with AI-powered insights*
